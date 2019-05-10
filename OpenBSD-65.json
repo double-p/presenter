@@ -1,0 +1,60 @@
+{
+  "variables": {
+    "hostname": "",
+    "architecture": "",
+    "keyboard_layout": "",
+    "root_password": "",
+    "timezone": "",
+    "ntp_pool": ""
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "name": "obsd-65-amd64",
+      "boot_command": [
+        "S<enter>",
+        "cat <<EOF >>install.conf<enter>",
+        "Choose your keyboard layout = {{user `keyboard_layout`}}<enter>",
+        "System hostname = {{user `hostname`}}<enter>",
+        "Password for root = {{user `root_password`}}<enter>",
+        "Start sshd(8) by default = yes<enter>",
+        "Do you expect to run the X Window System = no<enter>",
+        "Allow root ssh login = yes<enter>",
+        "What timezone are you in = {{user `timezone`}}<enter>",
+        "Location of sets = CD<enter>",
+        "Set name(s) = +comp*.tgz -game*.tgz +x* +bsd.mp<enter>",
+        "verification = yes<enter>",
+	"SHA256.sig. = yes<enter>",
+        "EOF<enter>",
+        "install -af install.conf && reboot<enter>"
+        ],
+      "boot_wait": "15s",
+      "disk_size": 10240,
+      "guest_os_type": "OpenBSD_64",
+      "iso_url": "file:///Users/pbuehler/Software/ISOs/install65.iso",
+      "iso_checksum": "38d1f8cadd502f1c27bf05c5abde6cc505dd28f3f34f8a941048ff9a54f9f608",
+      "iso_checksum_type": "sha256",
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "10m",
+      "shutdown_command": "echo '/sbin/halt -p' > shutdown.sh; sh 'shutdown.sh'",
+      "guest_additions_path": "disable",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "256" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "2" ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "environment_vars": [
+         "PKG_PATH=https://ftp.hostserver.de/pub/OpenBSD/6.5/packages/amd64/"
+      ],
+      "inline": "pkg_add -Iz python-3.6.8 sudo-1.8"
+    }
+  ],
+  "post-processors": ["vagrant"]
+}
+
