@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     diskfile = File.realpath( "." ).to_s + "/home_dir.vdi"
     cfg.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--memory", 512]
-      v.gui = true;
+      #v.gui = true;
       if !File.exist?(diskfile)
         v.customize ["createhd", "--filename", diskfile, "--format", "VDI", "--size", 5120 ]
       end
