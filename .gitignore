@@ -1,0 +1,4 @@
+*.vdi
+packer_*
+tmp/*
+presentations/*
