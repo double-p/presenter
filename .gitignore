@@ -1,3 +1,4 @@
+.vagrant
 *.vdi
 packer_*
 tmp/*
